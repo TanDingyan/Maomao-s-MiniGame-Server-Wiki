@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="zh" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title data-en="Minigames - Maomao's MiniGame Server" data-zh="小游戏 - 毛毛的小游戏服务器">小游戏 - 毛毛的小游戏服务器</title>
+  <script>
+    (function () {
+      try {
+        var t = localStorage.getItem('maomao-theme');
+        if (!t) t = (window.matchMedia && matchMedia('(prefers-color-scheme: dark)').matches) ? 'dark' : 'light';
+        document.documentElement.setAttribute('data-theme', t);
+      } catch (e) {}
+    })();
+  </script>
+  <link rel="stylesheet" href="./css/style.css">
+</head>
+<body>
+  <nav id="navbar"></nav>
+
+  <main class="container">
+
+    <section class="section">
+      <h2 class="section-title" data-en="Original Minigames" data-zh="原创游戏玩法">原创游戏玩法</h2>
+      <p class="lead" data-en="Each minigame has its own independently designed maps, mechanics, and win conditions. The game list will continue to grow as development progresses."
+         data-zh="每款小游戏都拥有独立设计的地图、机制和胜利条件。游戏列表会根据开发进度持续更新。">
+        每款小游戏都拥有独立设计的地图、机制和胜利条件。游戏列表会根据开发进度持续更新。</p>
+    </section>
+
+    <!-- 设计原则卡片 -->
+    <section class="section">
+      <div class="card-grid">
+        <div class="card">
+          <h3 data-en="Easy to learn, deep to master" data-zh="规则易懂，操作有深度">规则易懂，操作有深度</h3>
+          <p data-en="No tutorial needed to start, but real skill is required to excel."
+             data-zh="上手不需要教程，但精通需要真正的技巧。">上手不需要教程，但精通需要真正的技巧。</p>
+        </div>
+        <div class="card">
+          <h3 data-en="Every round feels different" data-zh="每局都有变化">每局都有变化</h3>
+          <p data-en="Random elements and dynamic events ensure no two matches play out the same way."
+             data-zh="随机元素和动态事件确保不会有两局完全相同的体验。">随机元素和动态事件确保不会有两局完全相同的体验。</p>
+        </div>
+        <div class="card">
+          <h3 data-en="Fast-paced and dense" data-zh="短节奏，高密度">短节奏，高密度</h3>
+          <p data-en="Matches are a comfortable length, perfect for jumping in anytime."
+             data-zh="单局时长适中，适合随时来一局。">单局时长适中，适合随时来一局。</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 游戏列表占位（服务器仍在开发中） -->
+    <section class="section">
+      <h2 class="section-title" data-en="Game List" data-zh="游戏列表">游戏列表</h2>
+      <div class="placeholder">
+        <p data-en="🚧 The minigame catalog is still under active development. Check back soon!"
+           data-zh="🚧 小游戏目录仍在积极开发中，敬请期待！">🚧 小游戏目录仍在积极开发中，敬请期待！</p>
+      </div>
+    </section>
+
+  </main>
+
+  <footer>
+    <div class="container">
+      <span data-en="Maomao's MiniGame Server Wiki · Powered by static HTML" data-zh="毛毛的小游戏服务器 Wiki · 静态 HTML 驱动">毛毛的小游戏服务器 Wiki · 静态 HTML 驱动</span>
+    </div>
+  </footer>
+
+  <script src="./js/main.js"></script>
+</body>
+</html>

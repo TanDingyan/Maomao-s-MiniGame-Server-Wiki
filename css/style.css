@@ -1,0 +1,354 @@
+/* =========================================================================
+   Maomao's MiniGame Server Wiki —— 样式表
+   纯原生 CSS，无任何框架/构建工具。
+   主题通过 <html data-theme="light|dark"> 切换，颜色全部用 CSS 变量定义，
+   浅色与深色只是同一组变量的不同取值，方便统一维护。
+   ========================================================================= */
+
+/* ---------- 1. 主题变量 ---------- */
+:root {
+  /* 浅色主题（默认） */
+  --bg: #f4f7f3;
+  --bg-alt: #ffffff;
+  --card: #ffffff;
+  --text: #1f2933;
+  --muted: #5b6770;
+  --primary: #3a9d4e;        /* 草方块绿 */
+  --primary-dark: #2e7d3f;
+  --accent: #2bb1a8;         /* 青绿点缀 */
+  --border: #e1e6e1;
+  --shadow: 0 6px 18px rgba(31, 41, 51, 0.08);
+  --shadow-hover: 0 10px 28px rgba(31, 41, 51, 0.14);
+  --code-bg: #eef2ee;
+  --nav-bg: rgba(255, 255, 255, 0.85);
+}
+
+/* 深色主题：仅覆盖变量取值 */
+[data-theme="dark"] {
+  --bg: #14181b;
+  --bg-alt: #1b2126;
+  --card: #1b2126;
+  --text: #e6eae6;
+  --muted: #9aa6a0;
+  --primary: #4caf50;
+  --primary-dark: #3d8b41;
+  --accent: #2bb1a8;
+  --border: #2a3238;
+  --shadow: 0 6px 18px rgba(0, 0, 0, 0.4);
+  --shadow-hover: 0 10px 28px rgba(0, 0, 0, 0.55);
+  --code-bg: #232b30;
+  --nav-bg: rgba(20, 24, 27, 0.85);
+}
+
+/* ---------- 2. 基础重置 ---------- */
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: "Segoe UI", "PingFang SC", "Microsoft YaHei", system-ui, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.7;
+  min-height: 100vh;
+  transition: background 0.3s ease, color 0.3s ease;
+}
+
+a { color: var(--primary); text-decoration: none; }
+a:hover { color: var(--primary-dark); }
+
+code {
+  background: var(--code-bg);
+  padding: 0.1em 0.45em;
+  border-radius: 6px;
+  font-family: "Cascadia Code", Consolas, monospace;
+  font-size: 0.92em;
+}
+
+.container {
+  width: 100%;
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+/* ---------- 3. 导航栏（由 js/main.js 动态注入 #navbar） ---------- */
+#navbar {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: var(--nav-bg);
+  backdrop-filter: saturate(160%) blur(10px);
+  -webkit-backdrop-filter: saturate(160%) blur(10px);
+  border-bottom: 1px solid var(--border);
+}
+
+.nav-inner {
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 0 20px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.nav-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 700;
+  color: var(--text);
+  font-size: 1.05rem;
+  white-space: nowrap;
+}
+.nav-brand:hover { color: var(--text); }
+
+/* 品牌处的小方块（像素风点缀） */
+.brand-cube {
+  width: 18px;
+  height: 18px;
+  background: var(--primary);
+  border: 2px solid var(--primary-dark);
+  box-shadow: 3px 3px 0 var(--primary-dark);
+  display: inline-block;
+}
+
+.nav-links {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.nav-link {
+  color: var(--muted);
+  padding: 8px 14px;
+  border-radius: 8px;
+  font-weight: 500;
+  transition: background 0.2s, color 0.2s;
+}
+.nav-link:hover { background: var(--code-bg); color: var(--text); }
+.nav-link.active { color: var(--primary); background: var(--code-bg); }
+
+.nav-btn {
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  color: var(--text);
+  padding: 7px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 600;
+  min-width: 40px;
+  transition: background 0.2s, border-color 0.2s;
+}
+.nav-btn:hover { border-color: var(--primary); color: var(--primary); }
+
+/* 移动端汉堡按钮，桌面端隐藏 */
+.nav-toggle {
+  display: none;
+  flex-direction: column;
+  gap: 4px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  margin-left: auto;
+  padding: 6px;
+}
+.nav-toggle span {
+  display: block;
+  width: 22px;
+  height: 2px;
+  background: var(--text);
+  border-radius: 2px;
+}
+
+/* ---------- 4. 页面通用区块 ---------- */
+main { padding: 40px 0 64px; }
+
+.section { margin-bottom: 52px; }
+
+.section-title {
+  font-size: 1.6rem;
+  font-weight: 700;
+  margin-bottom: 18px;
+  padding-left: 12px;
+  border-left: 4px solid var(--primary);
+}
+
+.lead { color: var(--muted); font-size: 1.05rem; }
+
+/* 卡片网格 */
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 18px;
+}
+
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 22px;
+  box-shadow: var(--shadow);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.card:hover { transform: translateY(-4px); box-shadow: var(--shadow-hover); }
+
+.card h3 { font-size: 1.15rem; margin-bottom: 8px; color: var(--primary-dark); }
+[data-theme="dark"] .card h3 { color: var(--primary); }
+.card p { color: var(--muted); font-size: 0.96rem; }
+
+/* ---------- 5. 首页 Hero ---------- */
+.hero {
+  background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+  color: #fff;
+  border-radius: 18px;
+  padding: 56px 40px;
+  text-align: center;
+  box-shadow: var(--shadow);
+  margin-bottom: 48px;
+}
+.hero h1 { font-size: 2.4rem; font-weight: 800; margin-bottom: 12px; letter-spacing: 0.5px; }
+.hero p { font-size: 1.1rem; opacity: 0.95; max-width: 640px; margin: 0 auto; }
+.hero .badge {
+  display: inline-block;
+  margin-bottom: 16px;
+  background: rgba(255,255,255,0.2);
+  border: 1px solid rgba(255,255,255,0.4);
+  padding: 4px 14px;
+  border-radius: 999px;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+/* ---------- 6. 信息表格 ---------- */
+.info-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: var(--shadow);
+}
+.info-table th, .info-table td {
+  text-align: left;
+  padding: 14px 18px;
+  border-bottom: 1px solid var(--border);
+}
+.info-table tr:last-child th, .info-table tr:last-child td { border-bottom: none; }
+.info-table th {
+  width: 40%;
+  color: var(--muted);
+  font-weight: 600;
+  background: var(--bg-alt);
+}
+
+/* ---------- 7. 加入服务器（地址 + 复制） ---------- */
+.join-box {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 14px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 22px 26px;
+  box-shadow: var(--shadow);
+}
+.join-addr {
+  font-family: "Cascadia Code", Consolas, monospace;
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--primary-dark);
+  background: var(--code-bg);
+  padding: 10px 16px;
+  border-radius: 10px;
+}
+[data-theme="dark"] .join-addr { color: var(--primary); }
+.copy-btn {
+  background: var(--primary);
+  color: #fff;
+  border: none;
+  padding: 10px 18px;
+  border-radius: 10px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.copy-btn:hover { background: var(--primary-dark); }
+
+/* ---------- 8. 更新日志列表 ---------- */
+.changelog-item {
+  position: relative;
+  padding: 0 0 28px 28px;
+  border-left: 2px solid var(--border);
+}
+.changelog-item:last-child { border-left-color: transparent; padding-bottom: 0; }
+.changelog-item::before {
+  content: "";
+  position: absolute;
+  left: -7px;
+  top: 4px;
+  width: 12px;
+  height: 12px;
+  background: var(--primary);
+  border: 2px solid var(--bg);
+  border-radius: 50%;
+}
+.changelog-item .ver {
+  font-weight: 700;
+  color: var(--primary-dark);
+}
+[data-theme="dark"] .changelog-item .ver { color: var(--primary); }
+.changelog-item .date { color: var(--muted); font-size: 0.88rem; margin-left: 8px; }
+.changelog-item ul { margin: 8px 0 0 18px; color: var(--muted); }
+.changelog-item li { margin: 2px 0; }
+
+/* 占位提示 */
+.placeholder {
+  text-align: center;
+  color: var(--muted);
+  background: var(--bg-alt);
+  border: 1px dashed var(--border);
+  border-radius: 14px;
+  padding: 40px 20px;
+}
+
+/* ---------- 9. 页脚 ---------- */
+footer {
+  border-top: 1px solid var(--border);
+  background: var(--bg-alt);
+  padding: 26px 0;
+  color: var(--muted);
+  font-size: 0.9rem;
+  text-align: center;
+}
+
+/* ---------- 10. 响应式 ---------- */
+@media (max-width: 720px) {
+  .hero { padding: 40px 22px; }
+  .hero h1 { font-size: 1.8rem; }
+  .nav-toggle { display: flex; }
+  .nav-links {
+    position: absolute;
+    top: 60px;
+    left: 0;
+    right: 0;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 4px;
+    background: var(--nav-bg);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--border);
+    padding: 10px 16px;
+    display: none;
+  }
+  .nav-links.open { display: flex; }
+  .nav-link { padding: 12px 14px; }
+  .nav-btn { width: 100%; }
+  .info-table th { width: 42%; }
+}
