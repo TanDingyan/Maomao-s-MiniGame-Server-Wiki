@@ -38,7 +38,9 @@
   var NAV_ITEMS = [
     { href: 'index.html',     en: 'Home',      zh: '首页' },
     { href: 'minigames.html', en: 'Minigames', zh: '小游戏' },
-    { href: 'changelog.html', en: 'Changelog', zh: '更新日志' }
+    { href: 'changelog.html', en: 'Changelog', zh: '更新日志' },
+    // external:true 的条目直接跳转到站外（Modrinth 服务器主页），新标签页打开
+    { external: true, url: 'https://modrinth.com/server/maomaos-minigame-server', en: 'Modrinth', zh: 'Modrinth' }
   ];
 
   function buildNavbar() {
@@ -59,9 +61,15 @@
     html += '<div class="nav-links" id="navLinks">';
     for (var i = 0; i < NAV_ITEMS.length; i++) {
       var it = NAV_ITEMS[i];
-      var active = (location.pathname.indexOf(it.href) !== -1) ? ' active' : '';
-      html += '<a class="nav-link' + active + '" href="' + PREFIX + it.href +
-              '" data-en="' + it.en + '" data-zh="' + it.zh + '">' + it.zh + '</a>';
+      if (it.external) {
+        // 站外链接：绝对地址 + 新标签页打开，不做 active 高亮
+        html += '<a class="nav-link" href="' + it.url + '" target="_blank" rel="noopener"' +
+                ' data-en="' + it.en + '" data-zh="' + it.zh + '">' + it.zh + '</a>';
+      } else {
+        var active = (location.pathname.indexOf(it.href) !== -1) ? ' active' : '';
+        html += '<a class="nav-link' + active + '" href="' + PREFIX + it.href +
+                '" data-en="' + it.en + '" data-zh="' + it.zh + '">' + it.zh + '</a>';
+      }
     }
     html += '<button class="nav-btn" id="langBtn" onclick="toggleLang()">EN</button>';
     html += '<button class="nav-btn" id="themeBtn" onclick="toggleTheme()" aria-label="Toggle theme">🌓</button>';

@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="zh" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title data-en="BeaconGame - Maomao's MiniGame Server" data-zh="信标攻防 BeaconGame - 毛毛的小游戏服务器">信标攻防 BeaconGame - 毛毛的小游戏服务器</title>
+  <meta name="description" content="信标攻防 BeaconGame —— 一款不对称限时攻防的原创 Minecraft 小游戏。">
+  <script>
+    (function () {
+      try {
+        var t = localStorage.getItem('maomao-theme');
+        if (!t) t = (window.matchMedia && matchMedia('(prefers-color-scheme: dark)').matches) ? 'dark' : 'light';
+        document.documentElement.setAttribute('data-theme', t);
+      } catch (e) {}
+    })();
+  </script>
+  <link rel="stylesheet" href="./css/style.css">
+</head>
+<body>
+  <nav id="navbar"></nav>
+
+  <main class="container">
+
+    <!-- 游戏 Hero -->
+    <section class="hero">
+      <span class="badge" data-en="Asymmetric Attack &amp; Defense" data-zh="不对称限时攻防">不对称限时攻防</span>
+      <h1 data-en="BeaconGame · 信标攻防" data-zh="信标攻防 BeaconGame">信标攻防 BeaconGame</h1>
+      <p data-en="An asymmetric timed match: defenders bury beacons in a short window, attackers then race to dismantle them. Wipe all beacons to win as attacker; survive till the clock runs out to win as defender."
+         data-zh="一局不对称限时攻防：防守方用短暂窗口埋下信标，进攻方随后限时拆除。信标全灭则攻方胜，撑到时间结束则守方胜。">
+        一局不对称限时攻防：防守方用短暂窗口埋下信标，进攻方随后限时拆除。信标全灭则攻方胜，撑到时间结束则守方胜。</p>
+    </section>
+
+    <!-- 1. 总览 -->
+    <section class="section">
+      <h2 class="section-title" data-en="Overview" data-zh="总览">总览</h2>
+      <p class="lead" data-en="One sentence: a timed asymmetric attack-and-defense. Defenders plant beacons during a brief window; attackers then have limited time to tear them all down."
+         data-zh="一句话定义：一局不对称限时攻防。防守方用短暂窗口埋下信标，进攻方随后限时拆除。">
+        一句话定义：一局不对称限时攻防。防守方用短暂窗口埋下信标，进攻方随后限时拆除。</p>
+      <h3 data-en="Design Pillars" data-zh="设计支柱" style="margin:18px 0 10px;color:var(--primary-dark);">设计支柱</h3>
+      <div class="card-grid">
+        <div class="card">
+          <h3 data-en="Asymmetric but fair" data-zh="不对称但公平">不对称但公平</h3>
+          <p data-en="Attack and defense are mirror complements; victory depends on execution, not innate strength."
+             data-zh="攻防能力镜像互补，胜负取决于执行力而非先天强弱。">攻防能力镜像互补，胜负取决于执行力而非先天强弱。</p>
+        </div>
+        <div class="card">
+          <h3 data-en="Time is pressure" data-zh="时间即压力">时间即压力</h3>
+          <p data-en="The 'blind' of planting and the 'clock' of attacking together create countdown tension."
+             data-zh="放置阶段的“盲”与进攻阶段的“钟”，共同制造倒计时的紧迫感。">放置阶段的“盲”与进攻阶段的“钟”，共同制造倒计时的紧迫感。</p>
+        </div>
+        <div class="card">
+          <h3 data-en="Random disruption" data-zh="随机搅局">随机搅局</h3>
+          <p data-en="Events periodically break the balance, forcing both teams to re-evaluate constantly."
+             data-zh="事件系统定期打破均势，逼两队不断重新评估局势。">事件系统定期打破均势，逼两队不断重新评估局势。</p>
+        </div>
+        <div class="card">
+          <h3 data-en="Growth feedback" data-zh="成长正反馈">成长正反馈</h3>
+          <p data-en="Kills and beacon breaks grant skill upgrades — snowball for the strong, comeback window for the weak."
+             data-zh="击杀与破标带来技能升级，让优势方滚雪球、劣势方看到翻盘窗口。">击杀与破标带来技能升级，让优势方滚雪球、劣势方看到翻盘窗口。</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2. 一局怎么玩 -->
+    <section class="section">
+      <h2 class="section-title" data-en="How a Match Works" data-zh="一局怎么玩">一局怎么玩</h2>
+      <p class="lead" data-en="A match is split into two phases to create a rhythm break: first give defenders a safe building window, then suddenly open the gates of combat."
+         data-zh="一局用两个阶段制造节奏断层：先给守方一段“安心建设”的时间，再突然拉开对抗的闸门。">
+        一局用两个阶段制造节奏断层：先给守方一段“安心建设”的时间，再突然拉开对抗的闸门。</p>
+
+      <h3 data-en="Match lifecycle" data-zh="一局的生命周期" style="margin:18px 0 10px;color:var(--primary-dark);">一局的生命周期</h3>
+      <p data-en="Lobby → join queue → admin starts match → Planting phase (defenders plant, attackers blinded & locked) → Attack phase (timed dismantle + events + skills) → beacons wiped = attacker win / time out with beacons left = defender win → 5s result → back to lobby."
+         data-zh="大厅集合 → 加入队列 → 管理员开局 → 放置阶段（守方睁眼埋雷，攻方被蒙眼锁死）→ 进攻阶段（限时拆标 + 事件搅局 + 技能对撞）→ 信标全灭则攻方胜 / 时间耗尽仍有信标则守方胜 → 5 秒结算复原 → 回大厅。">
+        大厅集合 → 加入队列 → 管理员开局 → 放置阶段（守方睁眼埋雷，攻方被蒙眼锁死）→ 进攻阶段（限时拆标 + 事件搅局 + 技能对撞）→ 信标全灭则攻方胜 / 时间耗尽仍有信标则守方胜 → 5 秒结算复原 → 回大厅。</p>
+
+      <div class="card-grid" style="margin-top:18px;">
+        <div class="card">
+          <h3 data-en="Planting phase" data-zh="放置阶段（守方窗口）">放置阶段（守方窗口）</h3>
+          <p data-en="Defenders plant beacons; attackers are blinded and locked in place (can only turn). A 10-second tick warns before it ends."
+             data-zh="守方睁眼抓紧埋信标；攻方被蒙眼 + 锁在原地（只能转头），物理上无法靠近。归零前 10 秒有滴答提示。">守方睁眼抓紧埋信标；攻方被蒙眼 + 锁在原地（只能转头），物理上无法靠近。归零前 10 秒有滴答提示。</p>
+        </div>
+        <div class="card">
+          <h3 data-en="Attack phase" data-zh="进攻阶段（对抗期）">进攻阶段（对抗期）</h3>
+          <p data-en="Gates open: attackers un-blinded, PvP on, defenders glow (marked) the whole time. Timed beacon dismantling begins; all other systems activate."
+             data-zh="闸门拉开：攻方致盲解除、PVP 开启、守方全程发光（等于被标记）。限时拆标开始，事件、技能、HUD 全面激活。">闸门拉开：攻方致盲解除、PVP 开启、守方全程发光（等于被标记）。限时拆标开始，事件、技能、HUD 全面激活。</p>
+        </div>
+      </div>
+
+      <h3 data-en="Win / Lose" data-zh="胜负判定" style="margin:18px 0 10px;color:var(--primary-dark);">胜负判定</h3>
+      <ul style="margin-left:20px;color:var(--muted);">
+        <li data-en="Attacker win: all beacons destroyed, OR defenders planted zero (auto-loss at end of planting)."
+            data-zh="攻方胜：拆光所有信标，或守方一个都没埋（放置结束即判负）。">攻方胜：拆光所有信标，或守方一个都没埋（放置结束即判负）。</li>
+        <li data-en="Defender win: time runs out with at least one beacon remaining."
+            data-zh="守方胜：时间耗尽仍有信标残留。">守方胜：时间耗尽仍有信标残留。</li>
+        <li data-en="Teams are assigned alternately (first-come attacks first) to avoid stacking; switching sides is allowed only while idle, locked during the match."
+            data-zh="队伍交替分配（先来先攻）避免抱团；对局进行中锁死换边，防止临阵倒戈。">队伍交替分配（先来先攻）避免抱团；对局进行中锁死换边，防止临阵倒戈。</li>
+      </ul>
+    </section>
+
+    <!-- 3. 信标系统 -->
+    <section class="section">
+      <h2 class="section-title" data-en="Beacon System" data-zh="信标系统">信标系统</h2>
+      <p class="lead" data-en="The beacon is the single victory axis: defenders protect a few points, attackers take them down. It converges the whole match into one readable goal."
+         data-zh="信标是整局游戏的唯一胜负轴：守方护住几个点，攻方端掉它们。它把对抗收敛成一个所有人都看得懂的目标。">
+        信标是整局游戏的唯一胜负轴：守方护住几个点，攻方端掉它们。它把对抗收敛成一个所有人都看得懂的目标。</p>
+      <ul style="margin-left:20px;color:var(--muted);">
+        <li data-en="Plant (planting phase, defenders only): each spot can hold only one beacon. Beacon count = defender's 'error budget'."
+            data-zh="埋（放置阶段，仅守方）：同一点不能重复埋。信标数量 = 守方的“容错次数”。">埋（放置阶段，仅守方）：同一点不能重复埋。信标数量 = 守方的“容错次数”。</li>
+        <li data-en="Protect (attack phase): surplus beacons in defender inventories are cleared; defenders glow the whole time (marked)."
+            data-zh="护（进攻阶段）：守方多余信标被清空（防偷埋）；守方全程发光（被标记）。">护（进攻阶段）：守方多余信标被清空（防偷埋）；守方全程发光（被标记）。</li>
+        <li data-en="Dismantle (attack phase, attackers only): breaking a beacon drops nothing, count -1. Last one to zero = attacker win."
+            data-zh="拆（进攻阶段，仅攻方）：破坏信标不掉落物品，信标数 -1；拆到最后一个归零 → 攻方直接获胜。">拆（进攻阶段，仅攻方）：破坏信标不掉落物品，信标数 -1；拆到最后一个归零 → 攻方直接获胜。</li>
+        <li data-en="Find: a 'beacon compass' always points to the nearest beacon. Beacons light up only near the end (99% event) as a final sprint signal."
+            data-zh="找：进攻方有“信标指南针”始终指向最近信标；平时信标不发光，仅终局（99% 事件）点亮高亮作为最后冲刺信号。">找：进攻方有“信标指南针”始终指向最近信标；平时信标不发光，仅终局（99% 事件）点亮高亮作为最后冲刺信号。</li>
+      </ul>
+    </section>
+
+    <!-- 4. 技能系统 -->
+    <section class="section">
+      <h2 class="section-title" data-en="Skill System" data-zh="技能系统">技能系统</h2>
+      <p class="lead" data-en="Pure planting/dismantling becomes 'whoever has more people wins'. Skills add a layer of growth and style: unlock actives and pick a combat route as the match progresses."
+         data-zh="纯靠拆/埋会很快变成“谁人多谁赢”。技能系统给个人一层成长与风格：随对局推进解锁主动技能、选择战斗路线。">
+        纯靠拆/埋会很快变成“谁人多谁赢”。技能系统给个人一层成长与风格：随对局推进解锁主动技能、选择战斗路线。</p>
+      <ul style="margin-left:20px;color:var(--muted);">
+        <li data-en="Pick a route before start: Raid (frontline), Disrupt (crowd control), Support (team buffs). Unselected players auto-assigned by team; Support must be picked manually."
+            data-zh="开局前选路线：突袭（正面硬刚）/ 干扰（控场）/ 辅助（保队友）。未选按阵营自动分配；辅助只能手动选。">开局前选路线：突袭（正面硬刚）/ 干扰（控场）/ 辅助（保队友）。未选按阵营自动分配；辅助只能手动选。</li>
+        <li data-en="Unlock by kills (snowball): thresholds at 1 / 2 / 4 kills unlock the next tier. Whole team gets resupplied on each unlock."
+            data-zh="靠击杀解锁（滚雪球）：1 / 2 / 4 杀跨过门槛解锁下一层；每次解锁全队补发补给。">靠击杀解锁（滚雪球）：1 / 2 / 4 杀跨过门槛解锁下一层；每次解锁全队补发补给。</li>
+        <li data-en="Upgrade by events: the 60% / 80% events trigger 'skill boost', whole-team tier +1."
+            data-zh="靠事件升级：60% / 80% 事件触发“技能强化”，全队技能层级 +1。">靠事件升级：60% / 80% 事件触发“技能强化”，全队技能层级 +1。</li>
+        <li data-en="Release: a skill is a 'star' in hand, right-click to cast, with cooldown. Usable only in the attack phase."
+            data-zh="释放：技能是手里一颗“星”，右键即放，有冷却。仅进攻阶段可用。">释放：技能是手里一颗“星”，右键即放，有冷却。仅进攻阶段可用。</li>
+      </ul>
+
+      <h3 data-en="Skill table" data-zh="技能一览" style="margin:18px 0 10px;color:var(--primary-dark);">技能一览</h3>
+      <table class="info-table">
+        <tr>
+          <th data-en="Route" data-zh="路线">路线</th>
+          <th data-en="Skill" data-zh="技能">技能</th>
+          <th data-en="Unlock (kills)" data-zh="解锁击杀">解锁击杀</th>
+          <th data-en="Effect" data-zh="效果">效果</th>
+        </tr>
+        <tr><td data-en="Raid" data-zh="突袭">突袭</td><td data-en="Break" data-zh="破阵">破阵</td><td>1</td><td data-en="Self strength, short burst" data-zh="自身力量，短促爆发">自身力量，短促爆发</td></tr>
+        <tr><td data-en="Raid" data-zh="突袭">突袭</td><td data-en="Charge" data-zh="冲锋">冲锋</td><td>2</td><td data-en="Dash forward (velocity, not teleport)" data-zh="向前的猛冲（位移）">向前的猛冲（位移）</td></tr>
+        <tr><td data-en="Raid" data-zh="突袭">突袭</td><td data-en="Annihilate" data-zh="湮灭">湮灭</td><td>4</td><td data-en="AoE damage + self strength" data-zh="范围伤害 + 自身力量">范围伤害 + 自身力量</td></tr>
+        <tr><td data-en="Disrupt" data-zh="干扰">干扰</td><td data-en="Blind" data-zh="致盲">致盲</td><td>1</td><td data-en="Nearest enemy blinded" data-zh="最近敌人失明">最近敌人失明</td></tr>
+        <tr><td data-en="Disrupt" data-zh="干扰">干扰</td><td data-en="Bind" data-zh="禁锢">禁锢</td><td>2</td><td data-en="Slow + mining fatigue in area" data-zh="范围内减速+挖掘疲劳">范围内减速+挖掘疲劳</td></tr>
+        <tr><td data-en="Disrupt" data-zh="干扰">干扰</td><td data-en="Drain" data-zh="枯竭">枯竭</td><td>4</td><td data-en="Weakness + hunger in area" data-zh="范围内虚弱+饥饿">范围内虚弱+饥饿</td></tr>
+        <tr><td data-en="Support" data-zh="辅助">辅助</td><td data-en="Supply" data-zh="补给">补给</td><td>1</td><td data-en="Arrows / golden apple / stone" data-zh="发箭/金苹果/石头">发箭/金苹果/石头</td></tr>
+        <tr><td data-en="Support" data-zh="辅助">辅助</td><td data-en="Guard" data-zh="守护">守护</td><td>2</td><td data-en="Ally resistance + heal" data-zh="友方抗性+回血">友方抗性+回血</td></tr>
+        <tr><td data-en="Support" data-zh="辅助">辅助</td><td data-en="Reveal" data-zh="窥敌">窥敌</td><td>4</td><td data-en="Reveal enemies in area" data-zh="范围内敌人显形">范围内敌人显形</td></tr>
+      </table>
+      <p style="margin-top:10px;color:var(--muted);" data-en="Passive (beacon-break buff): each beacon broken grants the whole attacker team a brief strength + forward impulse — binding 'breaking' to 'thrill'."
+         data-zh="被动（破标增益）：每次拆掉信标，攻方全队短暂获得力量 + 向前冲量——把“拆标”和“爽感”绑在一起。">被动（破标增益）：每次拆掉信标，攻方全队短暂获得力量 + 向前冲量——把“拆标”和“爽感”绑在一起。</p>
+    </section>
+
+    <!-- 5. 事件系统 -->
+    <section class="section">
+      <h2 class="section-title" data-en="Event System" data-zh="对局事件系统">对局事件系统</h2>
+      <p class="lead" data-en="A machine that auto-disrupts by time: at set points it drops supplies or chaos, forcing both teams to re-read the situation. The 'breathing valve' of rhythm."
+         data-zh="一台按时间自动搅局的机器：到点给全队发东西、或丢个乱子，逼两队不断重新读局势。节奏的“呼吸阀”。">
+        一台按时间自动搅局的机器：到点给全队发东西、或丢个乱子，逼两队不断重新读局势。节奏的“呼吸阀”。</p>
+      <table class="info-table">
+        <tr>
+          <th data-en="Progress" data-zh="进度">进度</th>
+          <th data-en="Type" data-zh="类型">类型</th>
+          <th data-en="Players see" data-zh="玩家会看到">玩家会看到</th>
+        </tr>
+        <tr><td>15%</td><td data-en="Fixed" data-zh="固定">固定</td><td data-en="Small airdrop: +1 golden apple each" data-zh="小空投：每人 +1 金苹果">小空投：每人 +1 金苹果</td></tr>
+        <tr><td>30%</td><td data-en="Random (2)" data-zh="随机二选一">随机二选一</td><td data-en="Agile attack (attackers speed) / Weakened defense (defenders weak)" data-zh="敏捷进攻（攻方加速）/ 防守阳痿（守方虚弱）">敏捷进攻（攻方加速）/ 防守阳痿（守方虚弱）</td></tr>
+        <tr><td>50%</td><td data-en="Fixed" data-zh="固定">固定</td><td data-en="Big airdrop: enchanted golden apple + totem" data-zh="大空投：附魔金苹果 + 不死图腾">大空投：附魔金苹果 + 不死图腾</td></tr>
+        <tr><td>60%</td><td data-en="Random (3)" data-zh="随机三选一">随机三选一</td><td data-en="Nuke / Swap / Skill boost" data-zh="核打击 / 移形换影 / 技能强化">核打击 / 移形换影 / 技能强化</td></tr>
+        <tr><td>80%</td><td data-en="Random (3)" data-zh="随机三选一">随机三选一</td><td data-en="Same three rolled again" data-zh="同上三个再抽一次">同上三个再抽一次</td></tr>
+        <tr><td>99%</td><td data-en="Fixed" data-zh="固定">固定</td><td data-en="Final assault: all beacons lit up" data-zh="终局总攻：所有信标点亮高亮">终局总攻：所有信标点亮高亮</td></tr>
+      </table>
+      <p style="margin-top:10px;color:var(--muted);" data-en="'Random three' disruptors: Nuke drops lit TNT above heads; Swap randomly exchanges positions 10 times; Skill boost raises whole-team tier. BossBar shows seconds to next event."
+         data-zh="“随机三选一”搅局王：核打击（头顶砸下点燃 TNT）、移形换影（随机两两交换位置 10 次）、技能强化（全队技能层级 +1）。BossBar 实时显示“距下次事件还有几秒”。">“随机三选一”搅局王：核打击（头顶砸下点燃 TNT）、移形换影（随机两两交换位置 10 次）、技能强化（全队技能层级 +1）。BossBar 实时显示“距下次事件还有几秒”。</p>
+    </section>
+
+    <!-- 6. 竞技场 -->
+    <section class="section">
+      <h2 class="section-title" data-en="Arena &amp; Boundaries" data-zh="竞技场与领地边界">竞技场与领地边界</h2>
+      <p class="lead" data-en="The match needs a bounded arena: too big and teams never meet, too small and there's no room to maneuver. The boundary defines 'where the battlefield is' and handles anti-cheat."
+         data-zh="对抗需要一个有边界的擂台：太大两队永远碰不上，太小没有走位空间。边界定义“战场在哪”，并负责反作弊。">
+        对抗需要一个有边界的擂台：太大两队永远碰不上，太小没有走位空间。边界定义“战场在哪”，并负责反作弊。</p>
+      <ul style="margin-left:20px;color:var(--muted);">
+        <li data-en="The arena is a floating box, open top, sides locked by the land-claim plugin. Non-members and external forces (ender pearl / chorus / piston / water flow) cannot cross — vertical play stays core."
+            data-zh="竞技场是悬空盒子，头顶敞开，四周由领地插件锁定。非成员及外力（末影珍珠/紫颂/活塞/水流）无法越界，立体走位依旧是核心。">竞技场是悬空盒子，头顶敞开，四周由领地插件锁定。非成员及外力（末影珍珠/紫颂/活塞/水流）无法越界，立体走位依旧是核心。</li>
+        <li data-en="Bottom is the void: fall below the box and you're instantly sent back to your spawn (no fall death, not counted as a kill)."
+            data-zh="底面是虚空：掉到盒子下沿以下会被瞬间送回本方重生点（软惩罚，不计入战绩）。">底面是虚空：掉到盒子下沿以下会被瞬间送回本方重生点（软惩罚，不计入战绩）。</li>
+        <li data-en="Admins frame the arena with a 'claim hoe' clicking two corners; the plugin auto-builds/reuses the claim on load."
+            data-zh="管理员用“领地木锄”点两个对角框出水平范围；加载时后台自动建/复用对应领地。">管理员用“领地木锄”点两个对角框出水平范围；加载时后台自动建/复用对应领地。</li>
+      </ul>
+    </section>
+
+    <!-- 7. 关键参数 -->
+    <section class="section">
+      <h2 class="section-title" data-en="Key Parameters" data-zh="关键参数">关键参数</h2>
+      <table class="info-table">
+        <tr>
+          <th data-en="Parameter" data-zh="参数">参数</th>
+          <th data-en="Default" data-zh="默认值">默认值</th>
+          <th data-en="Design intent" data-zh="设计意图">设计意图</th>
+        </tr>
+        <tr><td data-en="Beacon count" data-zh="信标数量">信标数量</td><td>3</td><td data-en="Defender error budget = attacker workload" data-zh="守方容错 = 攻方工作量">守方容错 = 攻方工作量</td></tr>
+        <tr><td data-en="Match length" data-zh="对局时长">对局时长</td><td>10 min</td><td data-en="Attack pressure ceiling (note: minutes)" data-zh="进攻压迫上限（按分钟计）">进攻压迫上限（按分钟计）</td></tr>
+        <tr><td data-en="Planting time" data-zh="放置时长">放置时长</td><td>100 s</td><td data-en="Defender build budget (note: seconds)" data-zh="守方建设预算（按秒计）">守方建设预算（按秒计）</td></tr>
+        <tr><td data-en="Gear tier" data-zh="装备层级">装备层级</td><td data-en="Diamond" data-zh="钻石">钻石</td><td data-en="Unified baseline, no gear crush" data-zh="统一 baseline，避免装备碾压">统一 baseline，避免装备碾压</td></tr>
+        <tr><td data-en="Instant respawn" data-zh="即时重生">即时重生</td><td data-en="On (1s)" data-zh="开（1 秒）">开（1 秒）</td><td data-en="Keep density, lower frustration" data-zh="保持对抗密度、降低挫败">保持对抗密度、降低挫败</td></tr>
+        <tr><td data-en="Min / Max players" data-zh="最小/最大人数">最小/最大人数</td><td>2 / 20</td><td data-en="At least 1v1; cap to avoid overload" data-zh="至少一攻一防；防单局过载">至少一攻一防；防单局过载</td></tr>
+      </table>
+      <p style="margin-top:10px;color:var(--muted);" data-en="Unit trap: match length is in minutes, planting time in seconds — easy to mix up in text/config."
+         data-zh="单位雷区：对局时长按“分钟”、放置时长按“秒”——两套单位极易在文案/配置里混淆。">单位雷区：对局时长按“分钟”、放置时长按“秒”——两套单位极易在文案/配置里混淆。</p>
+    </section>
+
+    <!-- 返回 -->
+    <section class="section">
+      <a class="nav-link" href="./minigames.html" data-en="← Back to Minigames" data-zh="← 返回小游戏列表">← 返回小游戏列表</a>
+    </section>
+
+  </main>
+
+  <footer>
+    <div class="container">
+      <span data-en="Maomao's MiniGame Server Wiki · Powered by static HTML" data-zh="毛毛的小游戏服务器 Wiki · 静态 HTML 驱动">毛毛的小游戏服务器 Wiki · 静态 HTML 驱动</span>
+    </div>
+  </footer>
+
+  <script src="./js/main.js"></script>
+</body>
+</html>
